@@ -1,18 +1,19 @@
 // src/lib/redisClient.js
 const redis = require('redis');
 const { logger } = require('../logging/logger');
+const config = require('../config');
 
 let client;
 
 async function connectRedis() {
   client = redis.createClient({
-    url: process.env.REDIS_URL || 'redis://127.0.0.1:6379',
+    url: config.redisUrl,
   });
 
   client.on('error', (err) => logger.error('Redis Client Error', err));
 
   await client.connect();
-  logger.info('Connected to Redis');
+  logger.info(`Connected to Redis: ${config.redisUrl}`);
 
   return client;
 }
